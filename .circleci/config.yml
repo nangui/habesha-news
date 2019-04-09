@@ -34,6 +34,15 @@ jobs:
           prefix: coverage
 workflows:
   version: 2
+<<<<<<< HEAD
   workflow:
     jobs:
     - build
+=======
+  develop:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only: release       # only run builds when a push on release branch happens
+>>>>>>> release
