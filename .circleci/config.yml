@@ -1,0 +1,39 @@
+# Javascript Node CircleCI 2.0 configuration file
+version: 2
+jobs:
+  build:
+    working_directory: ~/repo
+    docker:
+      # Docker images for node and mongodb
+      - image: circleci/node:10.15.3
+      - image: circleci/mongo:4.0.7
+    steps:
+      - checkout
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+      # Install all needed dependencies
+      - run:
+          name: Installing npm dependencies
+          command: npm install
+      # Run app tests
+      - run:
+          name: Running app tests
+          command: npm test
+      # Save the cache for faster builds
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+      # Save test coverage results
+      - store_artifacts:
+          path: coverage
+          prefix: coverage
+workflows:
+  version: 2
+  workflow:
+    jobs:
+    - build
